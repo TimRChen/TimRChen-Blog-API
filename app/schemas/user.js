@@ -5,7 +5,7 @@ const saltRouds = 10;
 const Schema = mongoose.Schema;
 
 let UserSchema = new Schema({
-    name: {
+    username: {
         unique: true,
         type: String,
     },
