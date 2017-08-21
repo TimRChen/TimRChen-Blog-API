@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-const session = require('express-session');
-const mongoStore = require('connect-mongo')(session);
+const mongoStore = require('connect-mongo');
 const dbUrl = 'mongodb://localhost/timrchenDB';
 const User = require('../app/controllers/user');
 // const Essay = require('../app/controllers/essay');
@@ -9,21 +8,6 @@ const User = require('../app/controllers/user');
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, {useMongoClient: true});
 
-// create session db
-router.use(session({
-    secret: 'essay',
-    store: new mongoStore({
-        url: dbUrl,
-        collection: 'timSession'
-    })
-}));
-
-// pre handle user
-// router.use(function(req, res, next) {
-// 	let _user = req.session.user;
-//     res.locals.user = _user;
-// 	next();
-// });
 
 // CORS
 router.all('*', function(req, res, next) {  
@@ -34,8 +18,35 @@ router.all('*', function(req, res, next) {
     next();
   });
 
+/**
+ * JWT
+ */
+router.get('/api/auth', User.getAuth);
 
-/* User */
+
+// 客户端token是否有效
+router.use(/^\/api\/.+/g, User.isAuth);
+
+/**
+ * 获取用户信息的接口
+ */
+router.get('/api/getUserInfo', User.getUserInfo);
+
+
+
+/**
+ * User API signup && login
+ * request: post
+ * body: {
+ *  "username": username,
+ *  "password": password
+ * },
+ * response: 
+ * body: {
+ *  "userId": userId,
+ *  "token": token
+ * }
+ */
 router.post('/signup', User.signup);
 router.post('/login', User.signin);
 

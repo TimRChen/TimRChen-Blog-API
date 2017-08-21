@@ -34,8 +34,10 @@ let UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
     let user = this;
     if (this.isNew) {
+        console.log('isNew!!!');
         this.meta.createAt = this.meta.updateAt = Date.now();
     } else {
+        console.log('isNotNew!!!')
         this.meta.updateAt = Date.now();
     }
 
