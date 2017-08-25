@@ -13,6 +13,11 @@ let UserSchema = new Schema({
         unique: true,
         type: String,
     },
+    // secretOrPrivateKey 需手动写入数据库!
+    secretOrPrivateKey: {
+        unique: true,
+        type: String
+    },
     // user|verify user|pro user:0|1|2, admin: >10, superAdmin: >50
     role: {
         type: Number,
@@ -34,8 +39,10 @@ let UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
     let user = this;
     if (this.isNew) {
+        console.log('isNew!!!');
         this.meta.createAt = this.meta.updateAt = Date.now();
     } else {
+        console.log('isNotNew!!!')
         this.meta.updateAt = Date.now();
     }
 

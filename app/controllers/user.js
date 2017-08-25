@@ -1,4 +1,5 @@
 const UserModel = require('../models/user');
+const jwt = require('jsonwebtoken');
 
 /* signUp */
 exports.signup = function(req, res) {
@@ -27,14 +28,16 @@ exports.signup = function(req, res) {
 				message: '用户名已存在，请重新输入!'
 			});
 		} else {
-			newUser = new UserModel(_user);
-			newUser.save(function(err, userData) {
+			user = new UserModel(_user);
+			user.save(function(err, userData) {
 				if (err) {
 					console.log(err);
+					res.status(400).send({
+						"message": "数据库存储有错误!"
+					});
 				} else {
 					res.status(200).send({
 						"userId": userData._id,
-						"token": userData.password,
 						"message": "注册成功!"
 					});
 				}
@@ -59,7 +62,7 @@ exports.signin = function(req, res) {
 		}
 
 		// 若用户名没有注册，需要处理
-		console.log(`user: ${user}`);		
+		console.log(`user: ${user}`);
 
 		// user不存在，返回注册页
 		if (!user) {
@@ -68,6 +71,13 @@ exports.signin = function(req, res) {
 			});
 		} else {
 
+			// payload
+			let payload = {
+				userId: user._id
+			};
+			// password
+			let secret = user.secretOrPrivateKey;
+
 			// 密码校对
 			user.comparePassword(password, function(err, result) {
 				if (err) {
@@ -75,12 +85,14 @@ exports.signin = function(req, res) {
 				}
 
 				if (result) {
-					// 将user信息存储至 session 中
-					req.session.user = user;
 					console.log('Password is matched');
+					
+					// generate JWT Token
+					let token = jwt.sign(payload, secret, {expiresIn: "7d"});
+
 					res.status(200).send({
 						"userId": user._id,
-						"token": user.password,
+						"token": token,
 						"message": "登录成功!"
 					});
 				} else {
@@ -98,10 +110,9 @@ exports.signin = function(req, res) {
 
 
 /* logout */
-exports.logout = function(req, res) {
-	delete req.session.user;
-	res.redirect('/');
-};
+// exports.logout = function(req, res) {
+	// delete req.session.user;
+// };
 
 
 /* userList page */

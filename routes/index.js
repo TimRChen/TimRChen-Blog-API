@@ -1,29 +1,14 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-const session = require('express-session');
-const mongoStore = require('connect-mongo')(session);
+const mongoStore = require('connect-mongo');
 const dbUrl = 'mongodb://localhost/timrchenDB';
 const User = require('../app/controllers/user');
+const UserModel = require('../app/models/user');
 // const Essay = require('../app/controllers/essay');
+const jwt = require('express-jwt');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, {useMongoClient: true});
-
-// create session db
-router.use(session({
-    secret: 'essay',
-    store: new mongoStore({
-        url: dbUrl,
-        collection: 'timSession'
-    })
-}));
-
-// pre handle user
-// router.use(function(req, res, next) {
-// 	let _user = req.session.user;
-//     res.locals.user = _user;
-// 	next();
-// });
 
 // CORS
 router.all('*', function(req, res, next) {  
@@ -32,23 +17,59 @@ router.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
     next();
-  });
+});
+
+// 使用express-jwt 进行验证  除了登录操作不需要验证，其余均需要通过JWT验证，否则无法操作.
+router.use(jwt({
+    secret: 'timrchen' // Todo: secret 参数需要存入数据库 
+}).unless({path: [
+    '/login'
+]}));
+
+// 用于验证用户JWT是否有效
+let requireAdmin = (req, res, next) => {
+
+    console.log(req.user);
+    if (!req.user.userId) {
+        return res.status(401).send({
+            message: "invalid token"
+        });
+    } else {
+        return res.status(200).send({
+            message: "token passed!",
+            state: "logged"
+        });        
+    }
+
+    next();
+};
+
+// JWT 错误处理
+router.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send({
+            message: "invalid token"
+        });
+    }
+});
 
 
-/* User */
+/**
+ * JWT 验证
+ */
+router.get('/api/auth', requireAdmin);
+
+
+/**
+ * User API - signup && login
+ */
 router.post('/signup', User.signup);
 router.post('/login', User.signin);
 
 
-// router.get('/signin', User.showSignin);
-// router.get('/signup', User.showSignup);
 // router.get('/logout', User.logout);
 // router.get('/admin/user/list', User.signinRequired, User.adminRequired, User.list);
 // router.delete('/admin/user/list', User.signinRequired, User.adminRequired, User.delete);
-
-
-
-
 
 /* Essay */
 // router.get('/essay/:id', Essay.detail);
