@@ -1,77 +1,5 @@
 const UserModel = require('../models/user');
-const Authentication = require('./authentication/authentication');
-
-let USER;
-
-UserModel.findOne({"username": "123"}, function(err, user) {
-	USER = user;
-	console.log(USER);
-});
-
-// 获取用户
-let getUser = function (username, password) {
-	let user = USER;
-
-	if (!user) return false;
-	if (user.password != password) return false
-
-	return user;
-};
-
-
-//认证管理的组件实例
-let auth = new Authentication({
-    getCredentials: function (req) {
-        return {
-            username: req.body.username || req.query.username,
-            password: req.body.password || req.query.password
-        }
-    },
-    verifyIdentity: function (formData) {
-        return getUser(formData.username, formData.password);
-    }
-});
-
-//获取token
-exports.getAuth = function (req, res) {
-    res.status(200).send({
-        "token": auth.generateToken(req)
-    });
-};
-
-// 客户端token是否有效 中间件
-exports.isAuth = function (req, res, next) {
-    // 如果是认证的请求，直接跳过
-    if (/^\/api\/auth/g.test(res.pathname)) {
-        console.log('客户端请求认证...');
-        next();
-        return;
-    }
-
-    // 其它请求验证用户是否登录
-    if (!auth.verify(req)) {
-        console.log('客户端token无效...');
-        res.json({
-			code: 304,
-			message: '客户端token无效...'
-        });
-    } else {
-        next();
-    }
-};
-
-
-//拉取用户信息的接口
-exports.getUserInfo = function (req, res) {
-    let data = auth.getIdentity(req);
-    //刷新token
-    let token = auth.refreshToken(req);
-    res.status(200).send({
-        data: data,
-        token: token
-    });
-};
-
+const jwt = require('jsonwebtoken');
 
 /* signUp */
 exports.signup = function(req, res) {
@@ -134,7 +62,7 @@ exports.signin = function(req, res) {
 		}
 
 		// 若用户名没有注册，需要处理
-		console.log(`user: ${user}`);		
+		console.log(`user: ${user}`);
 
 		// user不存在，返回注册页
 		if (!user) {
@@ -142,6 +70,13 @@ exports.signin = function(req, res) {
 				message: '用户名不存在，请注册后再进行登录操作!'
 			});
 		} else {
+
+			// payload
+			let payload = {
+				userId: user._id
+			};
+			// password
+			let secret = user.secretOrPrivateKey;
 
 			// 密码校对
 			user.comparePassword(password, function(err, result) {
@@ -151,8 +86,13 @@ exports.signin = function(req, res) {
 
 				if (result) {
 					console.log('Password is matched');
+					
+					// generate JWT Token
+					let token = jwt.sign(payload, secret, {expiresIn: "7d"});
+
 					res.status(200).send({
 						"userId": user._id,
+						"token": token,
 						"message": "登录成功!"
 					});
 				} else {
@@ -170,9 +110,9 @@ exports.signin = function(req, res) {
 
 
 /* logout */
-exports.logout = function(req, res) {
-	delete req.session.user;
-};
+// exports.logout = function(req, res) {
+	// delete req.session.user;
+// };
 
 
 /* userList page */
