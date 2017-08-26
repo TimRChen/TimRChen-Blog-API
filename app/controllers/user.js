@@ -90,6 +90,8 @@ exports.signin = function(req, res) {
 					// generate JWT Token
 					let token = jwt.sign(payload, secret, {expiresIn: "7d"});
 
+					console.log(`token is: ${token}`);
+
 					res.status(200).send({
 						"userId": user._id,
 						"token": token,
@@ -110,9 +112,12 @@ exports.signin = function(req, res) {
 
 
 /* logout */
-// exports.logout = function(req, res) {
-	// delete req.session.user;
-// };
+exports.logout = function(req, res) {
+	res.status(200).send({
+		"message": "退出登录成功!",
+		"state": "noLogged"
+	});
+};
 
 
 /* userList page */

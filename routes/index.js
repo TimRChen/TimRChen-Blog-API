@@ -21,8 +21,9 @@ router.all('*', function(req, res, next) {
 
 // 使用express-jwt 进行验证  除了登录操作不需要验证，其余均需要通过JWT验证，否则无法操作.
 router.use(jwt({
-    secret: 'timrchen' // Todo: secret 参数需要存入数据库 
+    secret: 'timrchen' // Todo: secret 参数需要存入数据库 后期更换为TimRChen
 }).unless({path: [
+    '/signup',
     '/login'
 ]}));
 
@@ -32,7 +33,8 @@ let requireAdmin = (req, res, next) => {
     console.log(req.user);
     if (!req.user.userId) {
         return res.status(401).send({
-            message: "invalid token"
+            message: "invalid token",
+            state: "noLogged"
         });
     } else {
         return res.status(200).send({
@@ -66,8 +68,13 @@ router.get('/api/auth', requireAdmin);
 router.post('/signup', User.signup);
 router.post('/login', User.signin);
 
+/**
+ * User API - logout
+ */
+router.get('/logout', User.logout);
 
-// router.get('/logout', User.logout);
+
+
 // router.get('/admin/user/list', User.signinRequired, User.adminRequired, User.list);
 // router.delete('/admin/user/list', User.signinRequired, User.adminRequired, User.delete);
 
