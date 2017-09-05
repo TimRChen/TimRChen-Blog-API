@@ -5,8 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 let EssaySchema = new Schema({
     title: String,
     content: String,
-    small: String,
-    poster: String,
+    picUrl: String,
     pv: {
         type: Number,
         default: 0
@@ -46,30 +45,30 @@ EssaySchema.statics = {
         return this
             .findOne({_id: id})     // 查找单条数据
             .exec(cb);
-    },
-    getMainPage: function (pageSize, cb) {
-        return this
-            .find({})   // 取出所有数据
-            .sort({"meta.createAt": -1})
-            .limit(pageSize)
-            .exec(cb);
-    },
-    queryNextEssays: function(page, pageSize, cb) {
-        return this
-            .find({})
-            .sort({"meta.createAt": -1})
-            .skip(pageSize*(page - 1))
-            .limit(pageSize)
-            .exec(cb);
-    },
-    queryLastEssays: function(page, pageSize, cb) {
-        return this
-            .find({})
-            .sort({"meta.createAt": -1})
-            .skip(pageSize*(1 - page))
-            .limit(pageSize)
-            .exec(cb);
     }
+    // getMainPage: function (pageSize, cb) {
+    //     return this
+    //         .find({})   // 取出所有数据
+    //         .sort({"meta.createAt": -1})
+    //         .limit(pageSize)
+    //         .exec(cb);
+    // },
+    // queryNextEssays: function(page, pageSize, cb) {
+    //     return this
+    //         .find({})
+    //         .sort({"meta.createAt": -1})
+    //         .skip(pageSize*(page - 1))
+    //         .limit(pageSize)
+    //         .exec(cb);
+    // },
+    // queryLastEssays: function(page, pageSize, cb) {
+    //     return this
+    //         .find({})
+    //         .sort({"meta.createAt": -1})
+    //         .skip(pageSize*(1 - page))
+    //         .limit(pageSize)
+    //         .exec(cb);
+    // }
 };
 
 

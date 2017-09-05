@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const mongoStore = require('connect-mongo');
 const dbUrl = 'mongodb://localhost/timrchenDB';
 const User = require('../app/controllers/user');
-const UserModel = require('../app/models/user');
-// const Essay = require('../app/controllers/essay');
+// const UserModel = require('../app/models/user');
+const Essay = require('../app/controllers/essay');
 const jwt = require('express-jwt');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
@@ -74,11 +74,12 @@ router.post('/login', User.signin);
 router.get('/logout', User.logout);
 
 
+/**
+ * Essay API - new Essay
+ */
+router.post('/api/essay/new', Essay.new);
 
-// router.get('/admin/user/list', User.signinRequired, User.adminRequired, User.list);
-// router.delete('/admin/user/list', User.signinRequired, User.adminRequired, User.delete);
 
-/* Essay */
 // router.get('/essay/:id', Essay.detail);
 // router.get('/admin/essay/new', User.signinRequired, User.adminRequired, Essay.new);
 // router.post('/admin/essay', User.signinRequired, User.adminRequired, Essay.save);
