@@ -19,12 +19,13 @@ router.all('*', function(req, res, next) {
     next();
 });
 
-// 使用express-jwt 进行验证  除了登录操作不需要验证，其余均需要通过JWT验证，否则无法操作.
+// 使用express-jwt 进行验证  不在unless中的 path 均需要通过JWT验证，否则无法操作.
 router.use(jwt({
     secret: 'timrchen' // Todo: secret 参数需要存入数据库 后期更换为TimRChen
 }).unless({path: [
     '/signup',
-    '/login'
+    '/login',
+    '/api/essay/list'
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -78,6 +79,12 @@ router.get('/logout', User.logout);
  * Essay API - new Essay
  */
 router.post('/api/essay/new', Essay.new);
+
+
+/**
+ * Essay API - essay list
+ */
+router.get('/api/essay/list', Essay.getList);
 
 
 // router.get('/essay/:id', Essay.detail);

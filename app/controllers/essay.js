@@ -43,6 +43,48 @@ exports.new = function (req, res, next) {
 
 
 
+/**
+ * GET - essay list
+ * response
+ * {
+ * 		essays: Object
+ * }
+ */
+exports.getList = function (req, res, next) {
+	EssayModel.fetch(function(err, essays) {
+		if (err) {
+			console.error(err);
+			res.status(500).send({
+				"message": "暂时无法获取文章信息!"
+			});
+		}
+		res.status(200).send({
+			essays: essays
+		});
+	});
+};
+
+
+/**
+ * GET - essay details
+ * response
+ * {
+ * 		title: 文章标题
+ * 		content: 文章内容
+ * 		picUrl: 文章标题图片地址
+ * 		meta: Object 文章创建/更新时间
+ * 		pv: 浏览量
+ * }
+ */
+exports.getEssayDetails = function (req, res, next) {
+	
+
+
+};
+
+
+
+
 
 
 /* GET detail page. */
@@ -62,19 +104,6 @@ exports.new = function (req, res, next) {
 // };
 
 
-/* GET admin page. */
-// exports.new = function(req, res) {
-// 	res.render('admin', {
-// 		poster: 'background-image: url(/images/banner.jpeg)',
-// 		title: '新建文章',
-// 		essay: {
-// 			title: '',
-// 			content: '',
-// 			poster: '',
-// 		}
-// 	});
-// };
-
 
 /* Edit/Update admin essay */
 // exports.update = function(req, res) {
@@ -88,67 +117,6 @@ exports.new = function (req, res, next) {
 // 			});
 // 		});
 // 	}
-// };
-
-
-// for parsing multipart/form-data
-// let upload = multer({dest: 'public/images/'}).single('poster');
-
-// /* POST admin essay */
-// exports.save = function(req, res) {
-//     upload(req, res, function(err) {
-// 		const essayObj = req.body;
-// 		const id = essayObj._id;
-// 		let _essay;
-
-//         if (err) {
-//             console.log(err);
-//         }
-//         const poster = req.file; // 由multer解析过来的poster对象
-//         console.log(req.file);
-//         // 获取上传图片信息
-//         let originalName = poster.originalname;
-//         let changePath = `public/images/${originalName}`;
-//         let path = `/images/${originalName}`;
-// 		// 更改上传文件路径
-//         fs.renameSync(poster.path, changePath);
-//         console.log(path);
-
-// 		if (id !== 'undefined') {
-// 			EssayModel.findById(id, function(err, essay) {
-// 				if (err) {
-// 					console.log(err);
-// 				}
-
-// 				// 用更新的字段替换老字段
-// 				_essay = _.extend(essay, essayObj);
-// 				_essay.save(function(err, essay) {
-// 					if (err) {
-// 						console.log(err);
-// 					}
-
-// 					// 更新后进行重定向，返回到文章详情页
-// 					res.redirect(`/essay/${essay._id}`);
-// 				});
-// 			});
-// 		} else {
-// 			// 构建新模型
-// 			_essay = new EssayModel({
-// 				title: essayObj.title,
-// 				content: essayObj.content,
-// 				small: essayObj.small,
-// 				poster: `background-image: url(${path})`
-// 			});
-
-// 			_essay.save(function(err, essay) {
-// 				if (err) {
-// 					console.log(err);
-// 				}
-// 				res.redirect(`/essay/${essay._id}`);
-// 			});
-// 		}
-//     });
-
 // };
 
 
