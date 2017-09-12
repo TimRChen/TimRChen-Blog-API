@@ -25,7 +25,8 @@ router.use(jwt({
 }).unless({path: [
     '/signup',
     '/login',
-    '/api/essay/list'
+    '/api/essay/list',
+    '/api/essay/details'
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -85,6 +86,12 @@ router.post('/api/essay/new', Essay.new);
  * Essay API - essay list
  */
 router.get('/api/essay/list', Essay.getList);
+
+/**
+ * Essay API - essay details
+ */
+router.get('/api/essay/details', Essay.getEssayDetails);
+
 
 
 // router.get('/essay/:id', Essay.detail);

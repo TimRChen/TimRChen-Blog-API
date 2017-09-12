@@ -69,16 +69,37 @@ exports.getList = function (req, res, next) {
  * GET - essay details
  * response
  * {
- * 		title: 文章标题
- * 		content: 文章内容
- * 		picUrl: 文章标题图片地址
- * 		meta: Object 文章创建/更新时间
- * 		pv: 浏览量
+ * 		essay: {
+ * 			title: 文章标题
+ * 			content: 文章内容
+ * 			picUrl: 文章标题图片地址
+ * 			meta: Object 文章创建/更新时间
+ * 			pv: 浏览量
+ * 		}
+ * 
  * }
  */
 exports.getEssayDetails = function (req, res, next) {
-	
 
+	const essayId = req.query.essayId;
+
+	EssayModel.update({_id: essayId}, {$inc: {pv: 1}}, function(err) {
+		if (err) {
+			console.log(err);
+		}
+	});
+
+	EssayModel.findById(essayId, function (err, essay) {
+		if (err) {
+			console.error(err);
+			res.status(500).send({
+				"message": "暂时无法获取文章详细信息!"
+			});
+		}
+		res.status(200).send({
+			essay: essay
+		});
+	});
 
 };
 
