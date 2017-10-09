@@ -99,14 +99,4 @@ router.get('/api/essay/details', Essay.getEssayDetails);
 router.delete('/api/essay/delete', Essay.delete);
 
 
-
-// router.get('/essay/:id', Essay.detail);
-// router.get('/admin/essay/new', User.signinRequired, User.adminRequired, Essay.new);
-// router.post('/admin/essay', User.signinRequired, User.adminRequired, Essay.save);
-// router.get('/admin/essay/update/:id', User.signinRequired, User.adminRequired, Essay.update);
-// router.get('/admin/essay/list', User.signinRequired, User.adminRequired, Essay.list);
-// router.delete('/admin/essay/list', User.signinRequired, User.adminRequired, Essay.delete);
-
-
-
 module.exports = router;
