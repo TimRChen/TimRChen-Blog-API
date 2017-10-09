@@ -4,6 +4,7 @@ const _ = require('underscore');
 
 /**
  * POST - new Essay
+ * 
  * headers: Authorization
  * response
  * 	{
@@ -45,6 +46,7 @@ exports.new = function (req, res, next) {
 
 /**
  * GET - essay list
+ * 
  * response
  * {
  * 		essays: Object
@@ -67,6 +69,7 @@ exports.getList = function (req, res, next) {
 
 /**
  * GET - essay details
+ * 
  * response
  * {
  * 		essay: {
@@ -104,9 +107,48 @@ exports.getEssayDetails = function (req, res, next) {
 };
 
 
+/**
+ * DELETE - essay
+ * 
+ * request: essayId
+ * headers: Authorization
+ * response: {
+ * 	message: '文章已删除'
+ * }
+ */
+exports.delete = function (req, res, next) {
+	const essayId = req.query.essayId;
+
+	if (essayId) {
+		EssayModel.findById({_id: essayId}, function (err, essay) {
+			if (err) {
+				res.status(500).send({
+					"message": "删除文章失败"
+				});
+			}
+			essay.remove(function (err) {
+				if (err) {
+					res.status(500).send({
+						"message": "删除文章失败"
+					});
+				} else {
+					res.status(200).send({
+						"message": "文章已删除"
+					});
+				}
+			});
+		});
+	} else {
+		res.status(404).send({
+			"message": "Error: essayId not found."
+		});
+	}
+};
 
 
 
+
+	//#region
 
 /* GET detail page. */
 // exports.detail = function(req, res, next) {
@@ -180,3 +222,5 @@ exports.getEssayDetails = function (req, res, next) {
 // 		});
 // 	}
 // };
+
+	//#endregion
