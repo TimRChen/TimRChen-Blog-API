@@ -13,8 +13,8 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 // CORS
 router.all('*', function(req, res, next) {  
     //设置允许 http://localhost:8080 这个域响应  Todo: 上线后改成 47.93.191.225
-    // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    res.header("Access-Control-Allow-Origin", "http://47.93.191.225");
+    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    // res.header("Access-Control-Allow-Origin", "http://47.93.191.225");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
     next();
@@ -93,15 +93,10 @@ router.get('/api/essay/list', Essay.getList);
  */
 router.get('/api/essay/details', Essay.getEssayDetails);
 
-
-
-// router.get('/essay/:id', Essay.detail);
-// router.get('/admin/essay/new', User.signinRequired, User.adminRequired, Essay.new);
-// router.post('/admin/essay', User.signinRequired, User.adminRequired, Essay.save);
-// router.get('/admin/essay/update/:id', User.signinRequired, User.adminRequired, Essay.update);
-// router.get('/admin/essay/list', User.signinRequired, User.adminRequired, Essay.list);
-// router.delete('/admin/essay/list', User.signinRequired, User.adminRequired, Essay.delete);
-
+/**
+ * Essay API - essay delete
+ */
+router.delete('/api/essay/delete', Essay.delete);
 
 
 module.exports = router;
