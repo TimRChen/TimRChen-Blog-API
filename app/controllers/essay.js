@@ -73,11 +73,18 @@ exports.new = function (req, res, next) {
  * 
  * response
  * {
+ *	 	essaySum: Number, 总条数
  * 		essays: Object
  * }
  */
 exports.getList = function (req, res, next) {
+	let essaySum = null;
+	
 	EssayModel.fetch(function(err, essays) {
+		essaySum = essays.length;
+	});
+
+	EssayModel.getMainPage(function(err, essays) {
 		if (err) {
 			console.error(err);
 			res.status(500).send({
@@ -85,10 +92,60 @@ exports.getList = function (req, res, next) {
 			});
 		}
 		res.status(200).send({
+			essaySum: essaySum,
 			essays: essays
 		});
 	});
 };
+
+
+
+/**
+ * POST - essay list & page
+ * 
+ * response
+ * {
+ * 		currentPage: Number, 当前页数
+ * 		essaySum: Number, 总条数
+ * 		essays: Object
+ * }
+ */
+exports.getPage = function (req, res, next) {
+	let nextPage = req.body.nextPage;
+	let essaySum = null;
+
+	EssayModel.fetch(function(err, essays) {
+		if (err) {
+			console.error(err);
+			res.status(500).send({
+				"message": "获取页面接口出问题."
+			});
+		}
+
+		essaySum = essays.length;
+
+		if (nextPage <= Math.ceil(essaySum / 4)) {
+			EssayModel.findPage(nextPage, function(err, essayList) {
+				if (err) {
+					console.error(err);
+					res.status(500).send({
+						"message": "页数不正确!"
+					});
+				}
+				res.status(200).send({
+					currentPage: nextPage,
+					essaySum: essaySum,
+					essays: essayList
+				});
+			});
+		} else {
+			res.status(500).send({
+				"message": "页数不正确!"
+			});
+		}
+	});
+};
+
 
 
 /**

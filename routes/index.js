@@ -89,6 +89,12 @@ router.post('/api/essay/new', Essay.new);
 router.get('/api/essay/list', Essay.getList);
 
 /**
+ * Essay API - essay page list
+ */
+router.post('/api/essay/page', Essay.getPage);
+
+
+/**
  * Essay API - essay details
  */
 router.get('/api/essay/details', Essay.getEssayDetails);
