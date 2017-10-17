@@ -33,42 +33,36 @@ EssaySchema.pre('save', function(next) {
 });
 
 
+const pageSize = 4; // 一页显示条数
+
 // 定义静态方法
 EssaySchema.statics = {
-    fetch: function(cb) {
+    fetch: function (cb) {
         return this
-            .find({})
-            .sort('meta.updateAt')
+            .find({})   // 取出所有数据
+            .sort({"meta.updateAt": -1})
             .exec(cb);
-    },
+    },    
     findById: function (id, cb) {
         return this
             .findOne({_id: id})     // 查找单条数据
             .exec(cb);
+    },
+    getMainPage: function (cb) { // 初始化首页数据
+        return this
+            .find({})   // 取出所有数据
+            .sort({"meta.updateAt": -1})
+            .limit(pageSize)
+            .exec(cb);
+    },
+    findPage: function (nextPage, cb) {
+        return this
+            .find({})
+            .sort({"meta.updateAt": -1})
+            .skip(pageSize*(nextPage - 1))
+            .limit(pageSize)
+            .exec(cb)
     }
-    // getMainPage: function (pageSize, cb) {
-    //     return this
-    //         .find({})   // 取出所有数据
-    //         .sort({"meta.createAt": -1})
-    //         .limit(pageSize)
-    //         .exec(cb);
-    // },
-    // queryNextEssays: function(page, pageSize, cb) {
-    //     return this
-    //         .find({})
-    //         .sort({"meta.createAt": -1})
-    //         .skip(pageSize*(page - 1))
-    //         .limit(pageSize)
-    //         .exec(cb);
-    // },
-    // queryLastEssays: function(page, pageSize, cb) {
-    //     return this
-    //         .find({})
-    //         .sort({"meta.createAt": -1})
-    //         .skip(pageSize*(1 - page))
-    //         .limit(pageSize)
-    //         .exec(cb);
-    // }
 };
 
 
