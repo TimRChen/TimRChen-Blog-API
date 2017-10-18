@@ -82,20 +82,23 @@ exports.getList = function (req, res, next) {
 	
 	EssayModel.fetch(function(err, essays) {
 		essaySum = essays.length;
+
+		EssayModel.getMainPage(function(err, essays) {
+			if (err) {
+				console.error(err);
+				res.status(500).send({
+					"message": "暂时无法获取文章信息!"
+				});
+			}
+			res.status(200).send({
+				essaySum: essaySum,
+				essays: essays
+			});
+		});
+
 	});
 
-	EssayModel.getMainPage(function(err, essays) {
-		if (err) {
-			console.error(err);
-			res.status(500).send({
-				"message": "暂时无法获取文章信息!"
-			});
-		}
-		res.status(200).send({
-			essaySum: essaySum,
-			essays: essays
-		});
-	});
+
 };
 
 /**
