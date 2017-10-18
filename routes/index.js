@@ -27,6 +27,7 @@ router.use(jwt({
     '/signup',
     '/login',
     '/api/essay/list',
+    '/api/essay/page',
     '/api/essay/details'
 ]}));
 
@@ -87,6 +88,11 @@ router.post('/api/essay/new', Essay.new);
  * Essay API - essay list
  */
 router.get('/api/essay/list', Essay.getList);
+
+/**
+ * Essay API - essay admin list
+ */
+router.get('/api/admin/list', Essay.getAdminList);
 
 /**
  * Essay API - essay page list

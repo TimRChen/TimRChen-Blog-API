@@ -98,7 +98,27 @@ exports.getList = function (req, res, next) {
 	});
 };
 
-
+/**
+ * GET - essay admin list
+ * 
+ * response
+ * {
+ * 		essays: Object
+ * }
+ */
+exports.getAdminList = function (req, res, next) {
+	EssayModel.fetch(function(err, essays) {
+		if (err) {
+			console.error(err);
+			res.status(500).send({
+				"message": "暂时无法获取文章信息!"
+			});
+		}
+		res.status(200).send({
+			essays: essays
+		});
+	});
+};
 
 /**
  * POST - essay list & page
