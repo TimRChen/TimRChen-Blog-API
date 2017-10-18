@@ -13,8 +13,8 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 // CORS
 router.all('*', function(req, res, next) {  
     //设置允许 http://localhost:8080 这个域响应  Todo: 上线后改成 47.93.191.225
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    // res.header("Access-Control-Allow-Origin", "http://47.93.191.225");
+    // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", "http://47.93.191.225");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
     next();
@@ -27,6 +27,7 @@ router.use(jwt({
     '/signup',
     '/login',
     '/api/essay/list',
+    '/api/essay/page',
     '/api/essay/details'
 ]}));
 
