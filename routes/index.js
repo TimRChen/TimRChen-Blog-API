@@ -5,13 +5,14 @@ const dbUrl = 'mongodb://localhost/timrchenDB';
 const User = require('../app/controllers/user');
 // const UserModel = require('../app/models/user');
 const Essay = require('../app/controllers/essay');
+const Comment = require('../app/controllers/comment');
 const jwt = require('express-jwt');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, {useMongoClient: true});
 
 // CORS
-router.all('*', function(req, res, next) {  
+router.all('*', function(req, res, next) {
     //设置允许 http://localhost:8080 这个域响应  Todo: 上线后改成 www.timrchen.site
     // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
     res.header("Access-Control-Allow-Origin", "http://www.timrchen.site");
@@ -28,7 +29,9 @@ router.use(jwt({
     '/login',
     '/api/essay/list',
     '/api/essay/page',
-    '/api/essay/details'
+    '/api/essay/details',
+    '/api/comment/create',
+    '/api/comment/list'
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -109,6 +112,17 @@ router.get('/api/essay/details', Essay.getEssayDetails);
  * Essay API - essay delete
  */
 router.delete('/api/essay/delete', Essay.delete);
+
+
+/**
+ * Comment API - create comment
+ */
+router.post('/api/comment/create', Comment.create);
+
+/**
+ * Comment API - get comment list
+ */
+router.get('/api/comment/list', Comment.getList);
 
 
 module.exports = router;
