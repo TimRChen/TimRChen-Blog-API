@@ -1,8 +1,15 @@
 # TimRChen-Blog-API
 Blog API by Express + MongoDB
 
-## Todo
--   分页接口优化
+## 1.0.0v
+
+-   增加评论接口
+
+### Todo
+
+-   评论管理接口
+    -   删除评论
+-   评论分页接口`待定`
 
 ## 0.0.6v
 
