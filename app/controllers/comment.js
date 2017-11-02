@@ -1,5 +1,6 @@
 const CommentModal = require('../models/comment');
 const _ = require('underscore');
+let antiXss = require('../utils/antiXss');
 
 
 /**
@@ -21,7 +22,7 @@ exports.create = function (req, res, next) {
         _comment = new CommentModal({
             essayId: commentObj.essayId,
             name: commentObj.name,
-            content: commentObj.content,
+            content: antiXss.enCodeHtml(commentObj.content),
         });
         
         _comment.save(function (err, comment) {
