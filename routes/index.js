@@ -14,8 +14,8 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 // CORS
 router.all('*', function(req, res, next) {
     //设置允许 http://localhost:8080 这个域响应  Todo: 上线后改成 www.timrchen.site
-    // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    res.header("Access-Control-Allow-Origin", "http://www.timrchen.site");
+    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    // res.header("Access-Control-Allow-Origin", "http://www.timrchen.site");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
     next();
@@ -95,7 +95,7 @@ router.get('/api/essay/list', Essay.getList);
 /**
  * Essay API - essay admin list
  */
-router.get('/api/admin/list', Essay.getAdminList);
+router.get('/api/essay/admin/list', Essay.getAdminList);
 
 /**
  * Essay API - essay page list
@@ -123,6 +123,16 @@ router.post('/api/comment/create', Comment.create);
  * Comment API - get comment list
  */
 router.get('/api/comment/list', Comment.getList);
+
+/**
+ * Comment API - get admin comment list
+ */
+router.get('/api/comment/admin/list', Comment.getAdminList);
+
+/**
+ * Comment API - delete comment
+ */
+router.delete('/api/comment/delete', Comment.delete);
 
 
 module.exports = router;
