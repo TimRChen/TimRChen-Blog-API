@@ -59,7 +59,7 @@ exports.getList = function (req, res, next) {
         if (err) {
             console.error(err);
             res.status(500).send({
-                "message": "暂时无法获取文章信息!"
+                "message": "暂时无法获取评论信息!"
             });
         }
         commentSum = comments.length;
@@ -73,3 +73,65 @@ exports.getList = function (req, res, next) {
 
 };
 
+
+/**
+ * GET - comment admin list
+ * 
+ * Authorization: token
+ * response
+ * {
+ *      comments: Object - all comments
+ * }
+ */
+exports.getAdminList = function (req, res, next) {
+    CommentModal.fetch(function (err, comments) {
+        if (err) {
+            console.error(err);
+            res.status(500).send({
+                "message": "暂时无法获取评论信息!"
+            });
+        }
+        res.status(200).send({
+            comments: comments
+        });
+    });
+};
+
+
+/**
+ * DELETE - comment
+ * 
+ * request: commentId
+ * headers: Authorization
+ * response: {
+ * 	message: '评论已删除'
+ * }
+ */
+exports.delete = function (req, res, next) {
+	const commentId = req.query.commentId;
+
+	if (commentId) {
+		CommentModal.findById({_id: commentId}, function (err, comment) {
+			if (err) {
+				res.status(500).send({
+					"message": "删除评论失败!"
+				});
+			}
+			comment.remove(function (err) {
+				if (err) {
+					res.status(500).send({
+						"message": "删除评论失败!"
+					});
+				} else {
+					res.status(200).send({
+						"message": "评论已删除!"
+					});
+				}
+			});
+		});
+	} else {
+		res.status(404).send({
+			"message": "Error: commentId not found."
+		});
+	}
+};
