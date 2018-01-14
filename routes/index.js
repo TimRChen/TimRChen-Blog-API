@@ -14,8 +14,8 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 // CORS
 router.all('*', function(req, res, next) {
     //设置允许 http://localhost:8080 这个域响应  Todo: 上线后改成 www.timrchen.site
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    // res.header("Access-Control-Allow-Origin", "http://www.timrchen.site");
+    // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", "http://*.timrchen.site");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
     next();
@@ -47,7 +47,7 @@ let requireAdmin = (req, res, next) => {
         return res.status(200).send({
             message: "token passed!",
             state: "logged"
-        });        
+        });
     }
 
     next();
