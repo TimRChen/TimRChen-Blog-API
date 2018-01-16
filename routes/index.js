@@ -8,6 +8,9 @@ const Essay = require('../app/controllers/essay');
 const Comment = require('../app/controllers/comment');
 const jwt = require('express-jwt');
 
+// Extra
+const News = require('../app/handlers/news');
+
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, {useMongoClient: true});
 
@@ -15,8 +18,10 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 router.all('*', function(req, res, next) {
     // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
     let currentReqHostName = req.hostname;
-    if (currentReqHostName === 'blog.timrchen.site' || currentReqHostName === 'www.timrchen.site' || currentReqHostName === 'localhost:8080') {
+    if (currentReqHostName === 'blog.timrchen.site' || currentReqHostName === 'www.timrchen.site') {
         res.header("Access-Control-Allow-Origin", 'http://' + currentReqHostName);
+    } else if (currentReqHostName === '127.0.0.1') {
+        res.header("Access-Control-Allow-Origin", 'http://' + currentReqHostName + ':8080');
     }
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
     res.header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");  
@@ -33,7 +38,8 @@ router.use(jwt({
     '/api/essay/page',
     '/api/essay/details',
     '/api/comment/create',
-    '/api/comment/list'
+    '/api/comment/list',
+    '/api/extra/news' // 额外的转发接口
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -135,6 +141,12 @@ router.get('/api/comment/admin/list', Comment.getAdminList);
  * Comment API - delete comment
  */
 router.delete('/api/comment/delete', Comment.delete);
+
+
+/**
+ * Extra 接口转发 —— 聚合数据新闻API
+ */
+router.get('/api/extra/news', News.provideNewsList);
 
 
 module.exports = router;
