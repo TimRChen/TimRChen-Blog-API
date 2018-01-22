@@ -55,7 +55,7 @@ exports.provideNewsList = function (request, response) {
             });
             // 监听 数据传输完成事件
             res.on('end', () => {
-                EXPIRES_DATE_BK.expires_date = new Date().getTime() + 7200000; // 两个小时过期
+                EXPIRES_DATE_BK.expires_date = new Date().getTime() + 1800000; // 半小时过期
                 fs.writeFile('./app/config/expires_date.json', JSON.stringify(EXPIRES_DATE_BK), function () {
                     result = Buffer.concat(buffer).toString('utf-8');
                     console.log(result);
