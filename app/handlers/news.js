@@ -44,7 +44,7 @@ exports.provideNewsList = function (request, response) {
     // 获取当前时间
     let currentTime = new Date().getTime();
     let EXPIRES_DATE_BK = EXPIRES_DATE;
-    let reqURL = shortUrlAPI.replace(':APPKEY', APPKEY).replace(':newsType', newsType.top);
+    let reqURL = shortUrlAPI.replace(':APPKEY', APPKEY).replace(':newsType', newsType.junshi);
     if (EXPIRES_DATE_BK.expires_date < currentTime) {
         http.get(reqURL, res => {
             let buffer = [],
@@ -56,12 +56,14 @@ exports.provideNewsList = function (request, response) {
             // 监听 数据传输完成事件
             res.on('end', () => {
                 EXPIRES_DATE_BK.expires_date = new Date().getTime() + 7200000; // 两个小时过期
-                fs.writeFileSync('./app/config/expires_date.json', JSON.stringify(EXPIRES_DATE_BK));
-                result = Buffer.concat(buffer).toString('utf-8');
-                console.log(result);
-                fs.writeFileSync('./app/config/news_data.json', result);
-                // 将最后结果返回
-                response.status(200).send(result);
+                fs.writeFile('./app/config/expires_date.json', JSON.stringify(EXPIRES_DATE_BK), function () {
+                    result = Buffer.concat(buffer).toString('utf-8');
+                    console.log(result);
+                    fs.writeFile('./app/config/news_data.json', result, function () {
+                        // 将最后结果返回
+                        response.status(200).send(result);
+                    });
+                });
             });
         }).on('error', err => {
             response.status(500).send({
