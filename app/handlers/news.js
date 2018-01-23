@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
-const EXPIRES_DATE = require('../config/expires_date'); // 接口请求限制时间，当前为2小时可重新请求一次
-const NEWS_DATA = require('../config/news_data'); // 暂存新闻数据
+let EXPIRES_DATE = require('../config/expires_date'); // 接口请求限制时间，当前为2小时可重新请求一次
+let NEWS_DATA = require('../config/news_data'); // 暂存新闻数据
 const shortUrlAPI = 'http://v.juhe.cn/toutiao/index?type=:newsType&key=:APPKEY';
 const APPKEY = 'bf881b7e3a5f864df4964d1456f50899';
 const newsType = {
@@ -56,10 +56,17 @@ exports.provideNewsList = function (request, response) {
             // 监听 数据传输完成事件
             res.on('end', () => {
                 EXPIRES_DATE_BK.expires_date = new Date().getTime() + 1800000; // 半小时过期
-                fs.writeFile('./app/config/expires_date.json', JSON.stringify(EXPIRES_DATE_BK), function () {
+                fs.writeFile('./app/config/expires_date.json', JSON.stringify(EXPIRES_DATE_BK), function (err) {
+                    if (err) {
+                        console.log('error: ', err);
+                    }
                     result = Buffer.concat(buffer).toString('utf-8');
                     console.log(result);
-                    fs.writeFile('./app/config/news_data.json', result, function () {
+                    fs.writeFile('./app/config/news_data.json', result, function (err) {
+                        if (err) {
+                            console.log('error: ', err);
+                        }
+                        NEWS_DATA = result;
                         // 将最后结果返回
                         response.status(200).send(result);
                     });
@@ -70,7 +77,7 @@ exports.provideNewsList = function (request, response) {
                 'err': err
             });
         });
-    } else {
+    } else if (EXPIRES_DATE_BK.expires_date > currentTime) {
         response.status(200).send(NEWS_DATA);
     }
 };
