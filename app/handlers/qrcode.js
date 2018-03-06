@@ -45,7 +45,7 @@ exports.contentToQrcode = function (request, response) {
      */
     params = enryptData(params);
     const requestQrcodeAPI = 'http://api.okayapi.com/?s=Ext.QrCode.Png'; // 小白接口提供 转换二维码接口
-    let requestURL = `${requestQrcodeAPI}&data=${params.textContent}&output=false&app_key=${params.app_key}&sign=${params.sign}`; // 正式请求接口
+    let requestURL = `${requestQrcodeAPI}&data=${encodeURI(params.textContent)}&output=false&app_key=${params.app_key}&sign=${params.sign}`; // 正式请求接口
     http.get(requestURL, res => {
         let buffer = [],
             result = '';
