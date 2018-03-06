@@ -54,7 +54,7 @@ exports.contentToQrcode = function (request, response) {
         // listen data trans over event.
         res.on('end', () => {
             result = Buffer.concat(buffer).toString();
-            console.log(`qrcode Object: ${JSON.parse(result)}`);
+            console.log(`qrcode Object: ${result}`);
             response.status(200).send(JSON.parse(result));
         });
     }).on('error', err => {
