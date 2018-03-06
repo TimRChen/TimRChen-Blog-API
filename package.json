@@ -1,6 +1,6 @@
 {
   "name": "timrchen-blog-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -14,6 +14,7 @@
     "express": "~4.15.2",
     "express-jwt": "^5.3.0",
     "jsonwebtoken": "^7.4.3",
+    "md5": "^2.2.1",
     "moment": "^2.18.1",
     "mongoose": "^4.9.4",
     "morgan": "~1.8.1",
