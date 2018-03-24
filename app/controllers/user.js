@@ -2,59 +2,59 @@ const UserModel = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 /* signUp */
-exports.signup = function(req, res) {
-	let _user = req.body;
+// exports.signup = function(req, res) {
+// 	let _user = req.body;
 
-	let username = _user.username;
-	let password = _user.password;
+// 	let username = _user.username;
+// 	let password = _user.password;
 
-	// 显示注册账号 & 密码
-	console.log(
-		'\x1b[33m%s\x1b[0m',
-		`> username: ${username} \n> password: ${password}`
-	);
+// 	// 显示注册账号 & 密码
+// 	console.log(
+// 		'\x1b[33m%s\x1b[0m',
+// 		`> username: ${username} \n> password: ${password}`
+// 	);
 
-	UserModel.findOne({"username": username}, function(err, user) {
-		if (err) {
-			console.log(err);
-			res.status(400).send({
-				"message": 'Bad Request'
-			});
-		}
+// 	UserModel.findOne({"username": username}, function(err, user) {
+// 		if (err) {
+// 			console.log(err);
+// 			res.status(400).send({
+// 				"message": 'Bad Request'
+// 			});
+// 		}
 
-		// 若用户名没有注册，需要处理
-		console.log(
-			'\x1b[36m%s\x1b[0m',
-			`user: ${user}`
-		);
+// 		// 若用户名没有注册，需要处理
+// 		console.log(
+// 			'\x1b[36m%s\x1b[0m',
+// 			`user: ${user}`
+// 		);
 
-		// 处理用户名重复
-		if (user) {
-			res.status(400).send({
-				message: '用户名已存在，请重新输入!'
-			});
-		} else {
-			user = new UserModel({
-				'username': username,
-				'password': password,
-				'secretOrPrivateKey': _user.secretOrPrivateKey
-			});
-			user.save(function(err, userData) {
-				if (err) {
-					console.log(err);
-					res.status(400).send({
-						"message": "数据库存储有错误!"
-					});
-				} else {
-					res.status(200).send({
-						"userId": userData._id,
-						"message": "注册成功!"
-					});
-				}
-			});
-		}
-	});
-};
+// 		// 处理用户名重复
+// 		if (user) {
+// 			res.status(400).send({
+// 				message: '用户名已存在，请重新输入!'
+// 			});
+// 		} else {
+// 			user = new UserModel({
+// 				'username': username,
+// 				'password': password,
+// 				'secretOrPrivateKey': _user.secretOrPrivateKey
+// 			});
+// 			user.save(function(err, userData) {
+// 				if (err) {
+// 					console.log(err);
+// 					res.status(400).send({
+// 						"message": "数据库存储有错误!"
+// 					});
+// 				} else {
+// 					res.status(200).send({
+// 						"userId": userData._id,
+// 						"message": "注册成功!"
+// 					});
+// 				}
+// 			});
+// 		}
+// 	});
+// };
 
 
 /* Login */

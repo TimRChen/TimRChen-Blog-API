@@ -30,9 +30,9 @@ router.all('*', function(req, res, next) {
 
 // 使用express-jwt 进行验证  不在unless中的 path 均需要通过JWT验证，否则无法操作.
 router.use(jwt({
-    secret: 'timrchen' // Todo: secret 参数需要存入数据库 后期更换为TimRChen
+    secret: 'timrchen' // Todo: secret 参数需要存入数据库
 }).unless({path: [
-    '/signup',
+    // '/signup',
     '/login',
     '/api/essay/list',
     '/api/essay/page',
@@ -85,7 +85,7 @@ router.get('/api/auth', requireAdmin);
 /**
  * User API - signup && login
  */
-router.post('/signup', User.signup);
+// router.post('/signup', User.signup);
 router.post('/login', User.signin);
 
 /**
