@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const mongoStore = require('connect-mongo');
 const dbUrl = 'mongodb://localhost/timrchenDB';
 const User = require('../app/controllers/user');
-// const UserModel = require('../app/models/user');
 const Essay = require('../app/controllers/essay');
 const Comment = require('../app/controllers/comment');
 const jwt = require('express-jwt');
@@ -47,7 +46,11 @@ router.use(jwt({
 // 用于验证用户JWT是否有效
 let requireAdmin = (req, res, next) => {
 
-    console.log(req.user);
+    console.log(
+        '\x1b[36m%s\x1b[0m',
+        `登录者信息：\n${req.user.userId}`
+    );
+
     if (!req.user.userId) {
         return res.status(401).send({
             message: "invalid token",

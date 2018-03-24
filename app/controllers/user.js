@@ -9,7 +9,10 @@ exports.signup = function(req, res) {
 	let password = _user.password;
 
 	// 显示注册账号 & 密码
-	console.log(`> username: ${username} \n> password: ${password}`);
+	console.log(
+		'\x1b[33m%s\x1b[0m',
+		`> username: ${username} \n> password: ${password}`
+	);
 
 	UserModel.findOne({"username": username}, function(err, user) {
 		if (err) {
@@ -20,7 +23,10 @@ exports.signup = function(req, res) {
 		}
 
 		// 若用户名没有注册，需要处理
-		console.log(`user: ${user}`);
+		console.log(
+			'\x1b[36m%s\x1b[0m',
+			`user: ${user}`
+		);
 
 		// 处理用户名重复
 		if (user) {
@@ -28,7 +34,11 @@ exports.signup = function(req, res) {
 				message: '用户名已存在，请重新输入!'
 			});
 		} else {
-			user = new UserModel(_user);
+			user = new UserModel({
+				'username': username,
+				'password': password,
+				'secretOrPrivateKey': _user.secretOrPrivateKey
+			});
 			user.save(function(err, userData) {
 				if (err) {
 					console.log(err);
@@ -62,7 +72,10 @@ exports.signin = function(req, res) {
 		}
 
 		// 若用户名没有注册，需要处理
-		console.log(`user: ${user}`);
+		console.log(
+			'\x1b[36m%s\x1b[0m',
+			'user is not exist.'
+		);
 
 		// user不存在，返回注册页
 		if (!user) {
@@ -76,7 +89,7 @@ exports.signin = function(req, res) {
 				userId: user._id
 			};
 			// password
-			let secret = user.secretOrPrivateKey;
+			let secret = user.secretOrPrivateKey.substring(0, 8); // 这里是为了取前几位做校验
 
 			// 密码校对
 			user.comparePassword(password, function(err, result) {
@@ -85,12 +98,18 @@ exports.signin = function(req, res) {
 				}
 
 				if (result) {
-					console.log('Password is matched');
+					console.log(
+						'\x1b[36m%s\x1b[0m',
+						'Password is matched'
+					);
 					
 					// generate JWT Token
 					let token = jwt.sign(payload, secret, {expiresIn: "7d"});
 
-					console.log(`token is: ${token}`);
+					console.log(
+						'\x1b[33m%s\x1b[0m',
+						`token is: ${token}`
+					);
 
 					res.status(200).send({
 						"userId": user._id,
@@ -99,7 +118,10 @@ exports.signin = function(req, res) {
 					});
 				} else {
 					// 密码不匹配
-					console.log('Password is not matched');
+					console.log(
+						'\x1b[36m%s\x1b[0m',
+						'Password is not matched'
+					);
 					res.status(404).send({
 						"message": "密码输入错误!"
 					});
@@ -118,62 +140,3 @@ exports.logout = function(req, res) {
 		"state": "noLogged"
 	});
 };
-
-
-/* userList page */
-// exports.list = function(req, res) {
-// 	UserModel.fetch(function(err, users) {
-// 		if (err) {
-// 			console.log(err);
-// 		}
-// 		res.render('userList', {
-// 			poster: 'background-image: url(/images/book.jpg)',
-// 			title: '用户列表页',
-// 			users: users,
-// 		});
-// 	});
-// };
-
-// list delete user
-// exports.delete = function(req, res, next) {
-// 	const id = req.query.id;
-// 	if (id) {
-// 		UserModel.findById({_id: id}, function(err, user) {
-// 			if (err) {
-// 				console.log(err);
-// 			}
-// 			// 删除文章内容
-// 			user.remove(function(err) {
-// 				if (err) {
-// 					console.log(err);
-// 					res.json({success: 0});
-// 				} else {
-// 					res.json({success: 1});
-// 				}
-// 			});
-// 		});
-// 	}
-// };
-
-
-/* middleware for user */
-// exports.signinRequired = function(req, res, next) {
-// 	let user = req.session.user;
-// 	console.log(user);
-
-// 	if (!user) {
-// 		return res.redirect('/signin');
-// 	}
-
-// 	next();
-// };
-
-/* middleware for admin */
-// exports.adminRequired = function(req, res, next) {
-// 	let user = req.session.user;
-// 	if (user.role <= 10) {
-// 		return res.redirect('/');
-// 	}
-
-// 	next();
-// };
