@@ -44,7 +44,7 @@ exports.provideNewsList = function (request, response) {
     // 获取当前时间
     let currentTime = new Date().getTime();
     let EXPIRES_DATE_BK = EXPIRES_DATE;
-    let reqURL = shortUrlAPI.replace(':APPKEY', APPKEY).replace(':newsType', newsType.junshi);
+    let reqURL = shortUrlAPI.replace(':APPKEY', APPKEY).replace(':newsType', newsType.shishang);
     if (EXPIRES_DATE_BK.expires_date < currentTime) {
         http.get(reqURL, res => {
             let buffer = [],
