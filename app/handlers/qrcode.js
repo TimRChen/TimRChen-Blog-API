@@ -1,4 +1,4 @@
-const http = require('http');
+const superRequest = require('../utils/request');
 const md5 = require('md5');
 /**
  * 生成小白接口签名
@@ -46,20 +46,11 @@ exports.contentToQrcode = function (request, response) {
     params = enryptData(params);
     const requestQrcodeAPI = 'http://api.okayapi.com/?s=Ext.QrCode.Png'; // 小白接口提供 转换二维码接口
     let requestURL = `${requestQrcodeAPI}&data=${encodeURI(params.textContent)}&output=false&app_key=${params.app_key}&sign=${params.sign}`; // 正式请求接口
-    http.get(requestURL, res => {
-        let buffer = [],
-            result = '';
-        // listen data event.
-        res.on('data', data => buffer.push(data));
-        // listen data trans over event.
-        res.on('end', () => {
-            result = Buffer.concat(buffer).toString();
-            console.log(`qrcode Object: ${result}`);
-            response.status(200).send(JSON.parse(result));
-        });
-    }).on('error', err => {
-        response.status(500).send({
-            'err': err
-        });
+    superRequest.requestHttp(requestURL).then(result => {
+        console.log(`qrcode Object: ${result}`);
+        response.status(200).send(JSON.parse(result));
+    }).catch(error => {
+        console.error(error);
+        response.status(500).send({'err': err});
     });
 };

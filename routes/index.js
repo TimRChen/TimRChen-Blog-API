@@ -10,6 +10,7 @@ const jwt = require('express-jwt');
 // Extra
 const News = require('../app/handlers/news');
 const Qrcode = require('../app/handlers/qrcode');
+const OneArticle = require('../app/handlers/oneArticle');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, {useMongoClient: true});
@@ -39,8 +40,10 @@ router.use(jwt({
     '/api/essay/details',
     '/api/comment/create',
     '/api/comment/list',
-    '/api/extra/news', // 额外的转发接口
-    '/api/extra/qrcode' // 额外的转发接口
+    '/api/extra/news', // Extra
+    '/api/extra/qrcode', // Extra
+    '/api/extra/oneArticle', // Extra
+    '/api/extra/oneArticle/random' // Extra
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -158,5 +161,11 @@ router.get('/api/extra/news', News.provideNewsList);
  * Extra 接口转发 —— 小白接口提供 文本转换为二维码
  */
 router.get('/api/extra/qrcode', Qrcode.contentToQrcode);
+
+/**
+ * Extra 每日一文 —— 提供每日一文 && 随机一文
+ */
+router.get('/api/extra/oneArticle', OneArticle.getOneArticle);
+router.get('/api/extra/oneArticle/random', OneArticle.getRandomArticle);
 
 module.exports = router;
