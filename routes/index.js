@@ -19,8 +19,8 @@ mongoose.connect(dbUrl, {useMongoClient: true});
 router.all('*', function(req, res, next) {
     // res.header("Access-Control-Allow-Origin", "http://localhost:8080");
     let currentReqHostName = req.hostname;
-    if (currentReqHostName === 'blog.timrchen.site' || currentReqHostName === 'www.timrchen.site') {
-        res.header("Access-Control-Allow-Origin", 'https://' + currentReqHostName);
+    if (currentReqHostName === 'api.timrchen.site') {
+        res.header("Access-Control-Allow-Origin", 'http://www.timrchen.site');
     } else if (currentReqHostName === '127.0.0.1') {
         res.header("Access-Control-Allow-Origin", 'http://' + currentReqHostName + ':8080');
     }
