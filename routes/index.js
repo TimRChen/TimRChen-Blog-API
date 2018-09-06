@@ -13,7 +13,7 @@ const Qrcode = require('../app/handlers/qrcode');
 const OneArticle = require('../app/handlers/oneArticle');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
-mongoose.connect(dbUrl, {useMongoClient: true});
+mongoose.connect(dbUrl, { useNewUrlParser: true });
 
 // CORS
 router.all('*', function(req, res, next) {

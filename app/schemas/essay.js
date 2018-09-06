@@ -33,7 +33,7 @@ EssaySchema.pre('save', function(next) {
 });
 
 
-const pageSize = 4; // 一页显示条数
+const pageSize = 6; // 一页显示条数
 
 // 定义静态方法
 EssaySchema.statics = {

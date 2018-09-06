@@ -147,7 +147,7 @@ exports.getPage = function (req, res, next) {
 
 		essaySum = essays.length;
 
-		if (nextPage <= Math.ceil(essaySum / 4)) {
+		if (nextPage <= Math.ceil(essaySum / 6)) {
 			EssayModel.findPage(nextPage, function(err, essayList) {
 				if (err) {
 					console.error(err);
