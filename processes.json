@@ -1,17 +1,13 @@
-[
+{
+  "apps": [
     {
-      "name": "blog-api",
+      "name": "api-server",
       "script": "./bin/www",
-      "interpreter":"node@10.9.0",
-      "exec_mode" : "fork",
-      "instances" : 1,
-      "args": "log",
-      "log_date_format": "YYYY-MM-DD HH:mm Z",
-      "watch": false,
-      "merge_logs"  : true,
+      "instances": "max",
+      "exec_mode": "fork",
       "env": {
-        "NODE_PORT": 61234,
-        "NODE_ENV": "development"
+        "NODE_ENV": "production"
       }
     }
-]
+  ]
+}

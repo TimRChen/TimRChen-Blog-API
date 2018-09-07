@@ -11,6 +11,7 @@ const jwt = require('express-jwt');
 const News = require('../app/handlers/news');
 const Qrcode = require('../app/handlers/qrcode');
 const OneArticle = require('../app/handlers/oneArticle');
+const RssReader = require('../app/handlers/rssReader');
 
 mongoose.Promise = global.Promise;  // 赋值一个全局Promise
 mongoose.connect(dbUrl, { useNewUrlParser: true });
@@ -43,7 +44,8 @@ router.use(jwt({
     '/api/extra/news', // Extra
     '/api/extra/qrcode', // Extra
     '/api/extra/oneArticle', // Extra
-    '/api/extra/oneArticle/random' // Extra
+    '/api/extra/oneArticle/random', // Extra
+    '/api/extra/rss-timrchen' // Extra
 ]}));
 
 // 用于验证用户JWT是否有效
@@ -167,5 +169,11 @@ router.get('/api/extra/qrcode', Qrcode.contentToQrcode);
  */
 router.get('/api/extra/oneArticle', OneArticle.getOneArticle);
 router.get('/api/extra/oneArticle/random', OneArticle.getRandomArticle);
+
+
+/**
+ * Extra RSS订阅接口，返回JSON
+ */
+router.post('/api/extra/rss-timrchen', RssReader.getContent);
 
 module.exports = router;
