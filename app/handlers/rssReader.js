@@ -14,7 +14,10 @@ exports.getContent = function (request, response) {
     const rssURL = `${apiHost}${rssURI}`;
     let req = httpRequest.get(rssURL);
     let feedparser = new FeedParser();
-    req.on('error', error => console.error(new Error(`Error by RSS Request Server: ${error}`)));
+    req.on('error', error => {
+        console.error(new Error(`Error by RSS Request Server: ${error}`))
+        response.status(500).send('rss server return bad status');
+    });
     req.on('response',  function (res) {
         var stream = this; // `this` is `req`, which is a stream
         res.statusCode !== 200 ? this.emit('error', new Error('Bad status code')) : stream.pipe(feedparser);
