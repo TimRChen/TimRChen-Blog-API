@@ -32,7 +32,7 @@ router.all('*', function(req, res, next) {
 
 // 使用express-jwt 进行验证  不在unless中的 path 均需要通过JWT验证，否则无法操作.
 router.use(jwt({
-    secret: 'timrchen' // Todo: secret 参数需要存入数据库
+    secret: 'timrchen'
 }).unless({path: [
     // '/signup',
     '/login',
@@ -50,12 +50,10 @@ router.use(jwt({
 
 // 用于验证用户JWT是否有效
 let requireAdmin = (req, res, next) => {
-
     console.log(
         '\x1b[36m%s\x1b[0m',
         `登录者信息：\n${req.user.userId}`
     );
-
     if (!req.user.userId) {
         return res.status(401).send({
             message: "invalid token",
@@ -67,7 +65,6 @@ let requireAdmin = (req, res, next) => {
             state: "logged"
         });
     }
-
     next();
 };
 
